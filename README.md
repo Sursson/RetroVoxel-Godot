@@ -18,5 +18,40 @@ For comparision purposes here are two screenshots from the same game, but almost
 <i>(Left) Blood: Refreshed Supply (2025)&emsp;&emsp;(Right) Blood (1997)</i>
 </p>
 <br>
-Notice how in the first release in 1997, voxels consisted of _"camera facing" billboards_, while nowadays (as in the 2025 version) voxels are rendered with _"cubes"_. Cubes obviously have their advantages when it comes to 3d rendering (see more below), but Retro Voxel
-offers a way to create an authentic, billboard voxel look if that's your vision. Note that this package comes with examples for both styles!
+
+Notice how in the first release in 1997, voxels consisted of *"camera facing" billboards*, while nowadays (as in the 2025 version) voxels are rendered with _"cubes"_. Cubes obviously have their advantages when it comes to 3d rendering (see more below), but Retro Voxel
+offers a way to create an authentic, billboard voxel look if that's your vision. <br>
+
+Note that this package comes with examples for both styles!
+
+## How to use it?
+Once you pulled this project, you can open it in Godot!
+
+Open `/scenes/voxelTest.tscn` and once you press **Run**, you should see the following:
+
+<p align=center>
+  <img width="1156" height="652" alt="2026-04-12 16_03_43-Window" src="https://github.com/user-attachments/assets/f5eb9182-9bf6-4479-9ab0-d8a81f452d7c" />
+  <i>From left to right: <b>Truck voxels</b> (Retro, Cube (Unshaded and Shaded)), <b>Monument</b> (Retro), <b>Knight</b> (Retro, Cube (Unshaded and Shaded))</i><br>
+  Monument and Knight voxels are made by <i><a href="https://x.com/ephtracy">ephtracy</a></i> and are exported from <b><a href="https://ephtracy.github.io/index.html?page=mv_main">MagicaVoxel</a></b>!
+</p>
+
+### FileSystem Guide
+```
+materials - (materials for cube rendering (mandantory in order to color voxels))
+scenes - 
+       - b_voxels_template.tscn - "prefab" scene for (b) billboard voxels
+       - c_voxels_template.tscn - "prefab" scene for (c) cube voxels
+       - voxelTest.tscn - demo scene
+scripts -
+        - auto_rotate.gd - a simple gdscript to rotate objects for demo scene
+        - voxel_maker.gd - voxel creation script that reads pixels from a resource file, and emits particles using the particle system for each pixel
+        - voxel_resource.gd - voxel resource that contains image data and options
+shaders -
+        - voxelShader.gdshader - a simple (default empty) shader that's needed to override particle color data upon emitting
+voxels - (example voxels)
+       - images - (.png images of voxel slices)
+       - objects - (voxel objects stored in voxel resources)
+```
+### Create new voxel
+First you need a .png file of your sliced voxel model! You can make your own in any image editing software *(Photoshop, GIMP, etc.)*, or you can use a voxel creation software *([MagicaVoxel](https://ephtracy.github.io/index.html?page=mv_main))*!
+
