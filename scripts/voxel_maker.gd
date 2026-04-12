@@ -44,17 +44,26 @@ func _ready() -> void:
 	
 # Voxels Initialization
 func init_voxels() -> void:
-	# If sheet numbers are set up correctly, calculate each axis' resolution for later use
-	if voxelResource.sheet.x > 0 and voxelResource.sheet.y > 0:
-		voxelResolution.x = voxelResource.voxelAtlas.get_width() / voxelResource.sheet.x
-		voxelResolution.y = voxelResource.voxelAtlas.get_height() / voxelResource.sheet.y
-		voxelResolution.z = voxelResource.sheet.x * voxelResource.sheet.y
-		
-		# In a later stage, we need to know if Spriteview is set to Positive or Negative
-		zPositive = voxelResource.spriteView == voxelResource.SpriteView.X_Positive or voxelResource.spriteView == voxelResource.SpriteView.Y_Positive or voxelResource.spriteView == voxelResource.SpriteView.Z_Positive
-		make_voxel()
+	if voxelResource:
+		if voxelResource.voxelAtlas:
+			# If sheet numbers are set up correctly, calculate each axis' resolution for later use
+			if voxelResource.sheet.x > 0 and voxelResource.sheet.y > 0:
+				voxelResolution.x = voxelResource.voxelAtlas.get_width() / voxelResource.sheet.x
+				voxelResolution.y = voxelResource.voxelAtlas.get_height() / voxelResource.sheet.y
+				voxelResolution.z = voxelResource.sheet.x * voxelResource.sheet.y
+				
+				# In a later stage, we need to know if Spriteview is set to Positive or Negative
+				zPositive = voxelResource.spriteView == voxelResource.SpriteView.X_Positive or voxelResource.spriteView == voxelResource.SpriteView.Y_Positive or voxelResource.spriteView == voxelResource.SpriteView.Z_Positive
+				make_voxel()
+			else:
+				printerr("Voxel Resource Sheet sizes have to be greater than 0.")	
+				view_voxels = false
+		else:
+			printerr("Voxel Atlas is empty.")
+			view_voxels = false
 	else:
-		printerr("Voxel Resource Sheet sizes have to be greater than 0")	
+		printerr("Voxel Resource is not set.")
+		view_voxels = false
 
 # Go through each pixel in the Voxel Atlas, and count each valid voxel, and return with the result
 func calculate_voxel_count() -> int:
