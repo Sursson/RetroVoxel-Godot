@@ -55,3 +55,26 @@ voxels - (example voxels)
 ### Create new voxel
 First you need a .png file of your sliced voxel model! You can make your own in any image editing software *(Photoshop, GIMP, etc.)*, or you can use a voxel creation software *([MagicaVoxel](https://ephtracy.github.io/index.html?page=mv_main))*!
 
+#### MagicaVoxel workflow
+1. Open **[MagicaVoxel](https://ephtracy.github.io/index.html?page=mv_main)**
+2. Load your voxel model
+3. In the *Export options*, use *Slice*
+4. Save the .png file
+5. Open **Godot**
+6. Open your project with the *Retro Voxel package* included
+7. Import your *voxel slices .png* file
+8. *Import as* ***Image***
+9. *Create New → Resource...*
+10. Search for *VoxelResource*
+12. In the *VoxelResource* add your *voxel image file* as the *Voxel Atlas property*
+13. Set the *Sheet* dimensions' *X value* to **1**, and *Y value* to your voxel's **Z depth layer count** <br> <i>Note: To get the correct number, find your model's size and check the value on the Z axis.</i> 
+14. Set the *Sprite View* to **"Y Positive"** and *Row Order* to **Bottom To Top**
+15. Leave the Pivot Offset as it is right now, you can always change it later!
+
+### Voxel Maker Setup
+1. Under the scenes folder use either b_voxels_template.tscn or c_voxels_template.tscn depending on if you want to create a (b) billboard or (c) cube voxel model. <br> Once you instantiate either into your scene, you will get a ***"Voxel Resource is not set."*** error - **don't mind it yet!**
+2. In the *Inspector* find the *Voxel Maker script's* properties and add your **Voxel Resource** to the *script's property*!
+3. *Voxel Size* is **1** by default, in some cases it is useful to set the size to a bigger value in the billboard variant.
+4. *Voxel Scale* should be set to better match your model size. <br> Note: by default, each voxel is 1 unit large. For example if your voxel model is 32 voxels wide, which should be 1 unit wide in the scene, the voxel scale should be 1/32, so 0.03125
+5. *Visibility Padding* is **1** by default. This sets a voxel unit thick border around your model and *sets that boundary as the Visibility AABB*.
+6. In the *Editor Visibility Menu* if you click the **On** button for ***View Models***, you will see your voxel model in the Editor, thus you can adjust your Voxel Resource properties easier (for example the pivot offset)! <br> Note: to see your changes, you should turn off and reactivate the View Voxels property!
