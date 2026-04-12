@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://r2ubdi1yrprt"
+path="res://.godot/imported/chr_knight.png-dad7d9c3dd524837ad258b5fe3d6fff9.image"
+
+[deps]
+
+source_file="res://voxels/images/chr_knight.png"
+dest_files=["res://.godot/imported/chr_knight.png-dad7d9c3dd524837ad258b5fe3d6fff9.image"]
+
+[params]
+

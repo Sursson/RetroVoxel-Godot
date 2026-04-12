@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://cv323eskgo4n7"]
+
+[ext_resource type="Shader" uid="uid://bvs874ynqbfw6" path="res://shaders/voxelShader.gdshader" id="1_bxwyv"]
+[ext_resource type="Script" uid="uid://daai2l363hffn" path="res://scripts/voxel_maker.gd" id="2_3r0qr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0wsjr"]
+shader = ExtResource("1_bxwyv")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mcyql"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+billboard_mode = 1
+billboard_keep_scale = true
+fov_override = 72.5
+proximity_fade_distance = 0.01
+stencil_flags = 2
+stencil_outline_thickness = 0.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_2d6w5"]
+material = SubResource("StandardMaterial3D_mcyql")
+
+[node name="BVoxels_Template" type="GPUParticles3D" unique_id=705110790]
+emitting = false
+amount = 1024
+speed_scale = 0.0
+visibility_aabb = AABB(-5, -2, -9, 10, 11, 17)
+local_coords = true
+transform_align = 1
+process_material = SubResource("ShaderMaterial_0wsjr")
+draw_pass_1 = SubResource("QuadMesh_2d6w5")
+script = ExtResource("2_3r0qr")

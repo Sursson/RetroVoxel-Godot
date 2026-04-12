@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="VoxelResource" format=3 uid="uid://3e0px50is7ds"]
+
+[ext_resource type="Script" uid="uid://bsd8a1ls6aosb" path="res://scripts/voxel_resource.gd" id="1_cygfj"]
+[ext_resource type="Image" uid="uid://sdwyciq5x3rf" path="res://voxels/images/monu1.png" id="2_cygfj"]
+
+[resource]
+script = ExtResource("1_cygfj")
+voxelAtlas = ExtResource("2_cygfj")
+sheet = Vector2i(1, 118)
+spriteView = 2
+rowOrder = 1
+pivotOffset = Vector3(-41.5, -41.5, 0.5)
+metadata/_custom_type_script = "uid://bsd8a1ls6aosb"

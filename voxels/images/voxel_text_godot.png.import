@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://caa35b2v6rfi2"
+path="res://.godot/imported/voxel_text_godot.png-470391b164b47c15f79d631fa8b4272a.image"
+
+[deps]
+
+source_file="res://voxels/images/voxel_text_godot.png"
+dest_files=["res://.godot/imported/voxel_text_godot.png-470391b164b47c15f79d631fa8b4272a.image"]
+
+[params]
+

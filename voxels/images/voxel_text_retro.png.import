@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://bmljibspq7cy5"
+path="res://.godot/imported/voxel_text_retro.png-2ce8bd26ddb87a2df40d79929b9766c0.image"
+
+[deps]
+
+source_file="res://voxels/images/voxel_text_retro.png"
+dest_files=["res://.godot/imported/voxel_text_retro.png-2ce8bd26ddb87a2df40d79929b9766c0.image"]
+
+[params]
+

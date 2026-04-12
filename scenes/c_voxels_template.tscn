@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bmoc0wbyag28x"]
+
+[ext_resource type="Shader" uid="uid://bvs874ynqbfw6" path="res://shaders/voxelShader.gdshader" id="1_irec5"]
+[ext_resource type="Script" uid="uid://daai2l363hffn" path="res://scripts/voxel_maker.gd" id="2_ev2x5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0wsjr"]
+shader = ExtResource("1_irec5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0wsjr"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+metallic_specular = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_0wsjr"]
+material = SubResource("StandardMaterial3D_0wsjr")
+
+[node name="CVoxels_Template" type="GPUParticles3D" unique_id=974292917]
+emitting = false
+amount = 1024
+speed_scale = 0.0
+visibility_aabb = AABB(-1, -1, -1, 2, 2, 2)
+local_coords = true
+process_material = SubResource("ShaderMaterial_0wsjr")
+draw_pass_1 = SubResource("BoxMesh_0wsjr")
+script = ExtResource("2_ev2x5")
