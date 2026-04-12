@@ -71,7 +71,7 @@ First you need a .png file of your sliced voxel model! You can make your own in 
 14. Set the *Sprite View* to **"Y Positive"** and *Row Order* to **Bottom To Top**
 15. Leave the Pivot Offset as it is right now, you can always change it later!
 
-### Voxel Maker Setup
+#### Voxel Maker Setup
 1. Under the scenes folder use either b_voxels_template.tscn or c_voxels_template.tscn depending on if you want to create a (b) billboard or (c) cube voxel model. <br> Once you instantiate either into your scene, you will get a ***"Voxel Resource is not set."*** error - **don't mind it yet!**
 2. In the *Inspector* find the *Voxel Maker script's* properties and add your **Voxel Resource** to the *script's property*!
 3. *Voxel Size* is **1** by default, in some cases it is useful to set the size to a bigger value in the billboard variant.
