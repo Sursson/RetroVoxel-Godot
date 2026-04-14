@@ -35,7 +35,7 @@ Open `/scenes/voxelTest.tscn` and once you press **Run**, you should see the fol
   Monument and Knight voxels are made by <i><a href="https://x.com/ephtracy">ephtracy</a></i> and are exported from <b><a href="https://ephtracy.github.io/index.html?page=mv_main">MagicaVoxel</a></b>!
 </p>
 
-### FileSystem Guide
+### FileSystem guide
 ```
 materials - (materials for cube rendering (mandantory in order to color voxels))
 scenes - 
@@ -67,8 +67,8 @@ First you need a .png file of your sliced voxel model! You can make your own in 
 9. *Create New → Resource...*
 10. Search for *VoxelResource*
 12. In the *VoxelResource* add your *voxel image file* as the *Voxel Atlas property*
-13. Set the *Sheet* dimensions' *X value* to **1**, and *Y value* to your voxel's **Z depth layer count** <br> <i>Note: To get the correct number, find your model's size and check the value on the Z axis.</i> 
-14. Set the *Sprite View* to **"Y Positive"** and *Row Order* to **Bottom To Top**
+13. Set the *Slice Sheet* dimensions' *X value* to **1**, and *Y value* to your voxel's **Z depth layer count** <br> <i>Note: To get the correct number, find your model's size and check the value on the Z axis.</i> 
+14. Set the *Row Order* to **Bottom To Top** and the *Draw Direction* to **Y Positive**
 15. Leave the Pivot Offset as it is right now, you can always change it later!
 16. You can continue with the [Voxel Maker setup](#voxel-maker-setup)!
 
@@ -78,6 +78,12 @@ First you need a .png file of your sliced voxel model! You can make your own in 
      1. Set your *background* to be *transparent* and *use full opaque pixels*!
      2. Your image atlas should consist of *tiles with same sizes*! *(Individual tiles can have non-uniform dimensions)*
      3. If you decide to use *multiple columns*, keep in mind that the script will always read each row's tiles from *left to right*!
+
+<p align=center>
+<img width="880" height="420" alt="Tiles Example" src="https://github.com/user-attachments/assets/80b25f6d-f764-42ed-a8c7-15686986e125" /><br>
+<i>Some examples for tile placements.</i>
+</p>
+
 3. Save the voxel atlas as a **.png** file
 4. Open **Godot**
 5. Open your project with the *Retro Voxel package* included
@@ -86,18 +92,48 @@ First you need a .png file of your sliced voxel model! You can make your own in 
 8. *Create New → Resource...*
 9. Search for *VoxelResource*
 10. In the *VoxelResource* add your *voxel image file* as the *Voxel Atlas property*
-11. Set the *Sheet* dimensions' *X value* to the number of **columns** *(tiles you made horizontally)*, and *Y value* to the number of **rows** *(tiles you made vertically)*
-12. Set the *Sprite View* to your desired axis:
-      - Each axis represents in which direction each tile will be drawn
-      - Each axis' positive or negative property decides in which order the tiles are drawn
-13. Set the *Row Order* depending on *which order* you want the script *to read your rows*
-14. Leave the Pivot Offset as it is right now, you can always change it later!
-15. You can continue with the [Voxel Maker setup](#voxel-maker-setup)!
+11. Set the *Slice Sheet* dimensions' *X value* to the number of **columns** *(tiles you made horizontally)*, and *Y value* to the number of **rows** *(tiles you made vertically)*
+12. Set the *Row Order* depending on *which order* you want the script *to read your rows*
+
+<p align=center>
+<img width="880" height="420" alt="Sheet and Row Order Example" src="https://github.com/user-attachments/assets/14db8721-f8d7-457d-9a5d-fd1e5d241975" /><br>
+<i>Some examples for <b>Slice Sheet</b> and <b>Row Order</b> settings.</i>
+</p>
+
+13. Set the *Draw Direction* to your **desired axis**. Each slice will be drawn along this axis in order.
+
+<p align=center>
+<i>Note that <b>Mirror Y</b> property has been turned <b>on</b> for presentation purposes! Also note how the green "1" starts close to the original pivot point, and each new slice is drawn in the direction of the specified axis!</i>
+<img width="880" height="420" alt="custom3X" src="https://github.com/user-attachments/assets/a9ff3d6a-d779-496f-b64c-5976a4a4584b" />
+
+<img width="880" height="420" alt="custom3Y" src="https://github.com/user-attachments/assets/974f6353-4c13-4132-a2cc-948e2df07a69" />
+
+<img width="880" height="420" alt="custom3Z" src="https://github.com/user-attachments/assets/1e2aeddd-e7bf-407a-859d-43bcb92ff296" />
+</p>
+
+14. If necessary turn on the Mirror property on any axis, this will not affect position, only the order each voxel is placed within the final boundary!
+15. Leave the Pivot Offset as it is right now, you can always change it later!
+16. You can continue with the [Voxel Maker setup](#voxel-maker-setup)!
 
 #### Voxel Maker setup
-1. Under the scenes folder use either b_voxels_template.tscn or c_voxels_template.tscn depending on if you want to create a (b) billboard or (c) cube voxel model. <br> Once you instantiate either into your scene, you will get a ***"Voxel Resource is not set."*** error - **don't mind it yet!**
-2. In the *Inspector* find the *Voxel Maker script's* properties and add your **Voxel Resource** to the *script's property*!
+1. Under the scenes folder use either b_voxels_template.tscn or c_voxels_template.tscn depending on if you want to create a (b) billboard or (c) cube voxel model. <br> Once you instantiate it into your scene, you will get a ***"Voxel Resource is not set."*** error - **don't mind it yet!**
+2. In the *Inspector* find the *Voxel Maker script's* properties and add your **Voxel Resource**!
 3. *Voxel Size* is **1** by default, in some cases it is useful to set the size to a bigger value in the billboard variant.
-4. *Voxel Scale* should be set to better match your model size. <br> Note: by default, each voxel is 1 unit large. For example if your voxel model is 32 voxels wide, which should be 1 unit wide in the scene, the voxel scale should be 1/32, so 0.03125
+4. *Voxel Scale* should be set to better match your model size. <br> Note: by default, each voxel is 1 unit large. For example if your voxel model is 32 voxels wide, but it should be 1 unit wide in the scene, the voxel scale should be 1/32, so 0.03125
 5. *Visibility Padding* is **1** by default. This sets a voxel unit thick border around your model and *sets that boundary as the Visibility AABB*.
-6. In the *Editor Visibility Menu* if you click the **On** button for ***View Models***, you will see your voxel model in the Editor, thus you can adjust your Voxel Resource properties easier (for example the pivot offset)! <br> Note: to see your changes, you should turn off and reactivate the View Voxels property!
+6. In the *Editor Visibility Menu* if you click the **On** button for ***View Models***, you will see your voxel model in the Editor, thus you can adjust your Voxel Resource properties easier (for example the mirror settings and the pivot offset)!
+7. If *View Voxels* is turned on, you can use *Refresh Voxels* to update the voxel model - especially when changes are made!
+
+## Final thoughts
+I would like to emphasize, that **Retro Voxel** is not without it's flaws!
+
+For one: particles are an easy way to display voxels, but not necessarily the most optimal way, so be cautious on your voxel counts!
+
+Also: Retro style billboard voxel rendering went out of fashion for a reason! It looks best in orthographic view, but can still look good with perspective cameras, as long as it doesn't look at it from a too steep angle (like looking up or down, or from the edge of the camera's view)!
+
+I would advice to use the billboard voxels for a retro style game, but if 3D movement causes too much issues and breaks immersion, switch to cube voxels instead!
+
+## License
+Feel free to use **Retro Voxel** in your personal or commercial project!
+
+Credits mention is not mandantory, but much appreciated! :)
