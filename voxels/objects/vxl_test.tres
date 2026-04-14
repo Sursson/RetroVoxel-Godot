@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="VoxelResource" format=3 uid="uid://3vv5p7ydiedo"]
+
+[ext_resource type="Script" uid="uid://bsd8a1ls6aosb" path="res://scripts/voxel_resource.gd" id="1_3fpks"]
+[ext_resource type="Image" uid="uid://djsfqeyal8lud" path="res://voxels/images/testVoxel.png" id="2_3fpks"]
+
+[resource]
+script = ExtResource("1_3fpks")
+voxelAtlas = ExtResource("2_3fpks")
+slice_sheet = Vector2i(1, 4)
+draw_direction = 5
+mirror_y = true
+metadata/_custom_type_script = "uid://bsd8a1ls6aosb"

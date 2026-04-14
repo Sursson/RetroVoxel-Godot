@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("1_ih56f")
 voxelAtlas = ExtResource("2_ih56f")
-sheet = Vector2i(1, 3)
-pivotOffset = Vector3(-64, -6, -2)
+slice_sheet = Vector2i(1, 3)
+mirror_y = true
+pivotOffset = Vector3(64, 6, 2)
 metadata/_custom_type_script = "uid://bsd8a1ls6aosb"

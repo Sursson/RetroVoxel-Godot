@@ -8,7 +8,7 @@
 extends Resource
 class_name VoxelResource
 
-enum SpriteView {
+enum DrawDirection {
 	X_Positive, ##Sprite is drawn from the [b]X axis[/b]. Each sprite will be drawn [b]on top[/b] of the last one.
 	X_Negative, ##Sprite is drawn from the [b]X axis[/b]. Each sprite will be drawn [b]under[/b] the last one.
 	Y_Positive,	##Sprite is drawn from the [b]Y axis[/b]. Each sprite will be drawn [b]on top[/b] of the last one.
@@ -24,10 +24,17 @@ enum RowOrder {
 ## Voxel texture atlas.
 @export var voxelAtlas : Image
 ## Number of frames on each axis
-@export var sheet : Vector2i = Vector2i.ONE
+@export var slice_sheet : Vector2i = Vector2i.ONE
 
-## Sprites' view from which axis the cross sections are drawn.
-@export var spriteView : SpriteView
 ## Rows' order
 @export var rowOrder : RowOrder
+## Direction in along which axis the slice sheets are drawn
+@export var draw_direction : DrawDirection
+
+@export_group("Mirror")
+@export var mirror_x : bool
+@export var mirror_y : bool
+@export var mirror_z : bool
+
+@export_group("")
 @export var pivotOffset : Vector3

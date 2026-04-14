@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("1_cygfj")
 voxelAtlas = ExtResource("2_cygfj")
-sheet = Vector2i(1, 118)
-spriteView = 2
+slice_sheet = Vector2i(1, 118)
 rowOrder = 1
-pivotOffset = Vector3(-41.5, -41.5, 0.5)
+draw_direction = 2
+pivotOffset = Vector3(70, 70, -0.5)
 metadata/_custom_type_script = "uid://bsd8a1ls6aosb"

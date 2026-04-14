@@ -9,7 +9,6 @@
 extends GPUParticles3D
 
 var voxelResolution : Vector3i
-var zPositive : bool
 
 @export var voxelResource : VoxelResource
 ## Controls the size of each individual voxel
@@ -23,12 +22,24 @@ var zPositive : bool
 @export var visibility_padding : int = 1
 
 @export_group("Editor Visibility")
-## Click to create voxels in Editor
-@export var view_voxels : bool = true:
+## Click to refresh voxels in Editor
+@export var refresh_voxels : bool = false:
 	set(value):
-		view_voxels = value
 		if not Engine.is_editor_hint():
 			return
+		if view_voxels:
+			refresh_voxels = value
+			if refresh_voxels:
+				self.restart()
+				init_voxels()
+				refresh_voxels = false
+
+## Click to view voxels in Editor
+@export var view_voxels : bool = true:
+	set(value):
+		if not Engine.is_editor_hint():
+			return
+		view_voxels = value
 		if view_voxels:
 			init_voxels()
 		else:
@@ -47,13 +58,11 @@ func init_voxels() -> void:
 	if voxelResource:
 		if voxelResource.voxelAtlas:
 			# If sheet numbers are set up correctly, calculate each axis' resolution for later use
-			if voxelResource.sheet.x > 0 and voxelResource.sheet.y > 0:
-				voxelResolution.x = voxelResource.voxelAtlas.get_width() / voxelResource.sheet.x
-				voxelResolution.y = voxelResource.voxelAtlas.get_height() / voxelResource.sheet.y
-				voxelResolution.z = voxelResource.sheet.x * voxelResource.sheet.y
+			if voxelResource.slice_sheet.x > 0 and voxelResource.slice_sheet.y > 0:
+				voxelResolution.x = voxelResource.voxelAtlas.get_width() / voxelResource.slice_sheet.x
+				voxelResolution.y = voxelResource.voxelAtlas.get_height() / voxelResource.slice_sheet.y
+				voxelResolution.z = voxelResource.slice_sheet.x * voxelResource.slice_sheet.y
 				
-				# In a later stage, we need to know if Spriteview is set to Positive or Negative
-				zPositive = voxelResource.spriteView == voxelResource.SpriteView.X_Positive or voxelResource.spriteView == voxelResource.SpriteView.Y_Positive or voxelResource.spriteView == voxelResource.SpriteView.Z_Positive
 				make_voxel()
 			else:
 				printerr("Voxel Resource Sheet sizes have to be greater than 0.")	
@@ -75,6 +84,7 @@ func calculate_voxel_count() -> int:
 	return n
 
 func make_voxel() -> void:
+	print(self.name, " has started making voxels...")
 	# Set Particle count to the total voxel count
 	self.amount = calculate_voxel_count()
 	
@@ -86,18 +96,14 @@ func make_voxel() -> void:
 	var AABB_maxPos : Vector3
 	var first_voxel_emitted : bool = false
 	
-	# Z Positive determines if we are drawing each layer from front to back or vice versa
-	if zPositive:
-		vRZ = 0
-	else:
-		vRZ = voxelResolution.z
-	
+
+	vRZ = 0
 	# PARTICLE EMITTING STARTS HERE 
 	self.emitting = true
 	
 	# For each sheet / frame...
-	for vSY in voxelResource.sheet.y:
-		for vSX in voxelResource.sheet.x:
+	for vSY in voxelResource.slice_sheet.y:
+		for vSX in voxelResource.slice_sheet.x:
 			# For each of their pixels...
 			for vRY in voxelResolution.y:
 				for vRX in voxelResolution.x:
@@ -105,7 +111,7 @@ func make_voxel() -> void:
 					var voxelColor : Color
 					if voxelResource.rowOrder == voxelResource.RowOrder.Bottom_to_Top:
 						voxelColor = voxelResource.voxelAtlas.get_pixel(vSX * voxelResolution.x + 
-						vRX, (((voxelResource.sheet.y - 1) - vSY) * voxelResolution.y) + vRY)
+						vRX, (((voxelResource.slice_sheet.y - 1) - vSY) * voxelResolution.y) + vRY)
 					else:
 						voxelColor = voxelResource.voxelAtlas.get_pixel(
 							vSX * voxelResolution.x + vRX, vSY * voxelResolution.y + vRY)
@@ -118,38 +124,60 @@ func make_voxel() -> void:
 						var vPos = Transform3D()
 						# Scale according to the Voxel Size
 						vPos = vPos.scaled(Vector3.ONE * voxelSize)
+						
+						var vPosV3 : Vector3
+						
 						# Set it's Position according to it's position and pivot offset
-						var x = -vRX + voxelResolution.x - 1 + voxelResource.pivotOffset.x
-						var y = -vRY + voxelResolution.y - 1 + voxelResource.pivotOffset.y
-						var z = vRZ + voxelResource.pivotOffset.z
+						if !voxelResource.mirror_x:
+							vPosV3.x = vRX - voxelResource.pivotOffset.x
+						else:
+							vPosV3.x = voxelResolution.x - 1 - vRX - voxelResource.pivotOffset.x
+						
+						if !voxelResource.mirror_y:
+							vPosV3.y = vRY - voxelResource.pivotOffset.y
+						else:
+							vPosV3.y = voxelResolution.y - 1 - vRY - voxelResource.pivotOffset.y
+						
+						if !voxelResource.mirror_z:
+							vPosV3.z = vRZ - voxelResource.pivotOffset.z
+						else:
+							vPosV3.z = voxelResolution.z - 1 - vRZ - voxelResource.pivotOffset.z
+						
+						
 						
 						# If this is our first voxel, set the min and max position value to it
 						if !first_voxel_emitted:
-							AABB_minPos = Vector3(x, y, z)
-							AABB_maxPos = Vector3(x, y, z)
+							AABB_minPos = vPosV3
+							AABB_maxPos = vPosV3
 							first_voxel_emitted = true
 						
 						# Check if voxel's position is the actual min or max value on each axis
-						if x < AABB_minPos.x:
-							AABB_minPos.x = x
-						if x > AABB_maxPos.x:
-							AABB_maxPos.x = x
-						if y < AABB_minPos.y:
-							AABB_minPos.y = y
-						if y > AABB_maxPos.y:
-							AABB_maxPos.y = y
-						if z < AABB_minPos.z:
-							AABB_minPos.z = z
-						if z > AABB_maxPos.z:
-							AABB_maxPos.z = z
+						if vPosV3.x < AABB_minPos.x:
+							AABB_minPos.x = vPosV3.x
+						if vPosV3.x > AABB_maxPos.x:
+							AABB_maxPos.x = vPosV3.x
+						if vPosV3.y < AABB_minPos.y:
+							AABB_minPos.y = vPosV3.y
+						if vPosV3.y > AABB_maxPos.y:
+							AABB_maxPos.y = vPosV3.y
+						if vPosV3.z < AABB_minPos.z:
+							AABB_minPos.z = vPosV3.z
+						if vPosV3.z > AABB_maxPos.z:
+							AABB_maxPos.z = vPosV3.z
 						
 						# Position is converted from drawing coordinates (XY atlasview + Z layers) to particle's local space coordinates
-						if voxelResource.spriteView == voxelResource.SpriteView.X_Positive or voxelResource.spriteView == voxelResource.SpriteView.X_Negative:
-							vPos.origin = Vector3(z, y, -x)
-						elif voxelResource.spriteView == voxelResource.SpriteView.Y_Positive or voxelResource.spriteView == voxelResource.SpriteView.Y_Negative:
-							vPos.origin = Vector3(y, z, -x)
+						if voxelResource.draw_direction == voxelResource.DrawDirection.X_Positive:
+							vPos.origin = Vector3(vPosV3.z, vPosV3.y, vPosV3.x)
+						elif voxelResource.draw_direction == voxelResource.DrawDirection.X_Negative :
+							vPos.origin = Vector3(-vPosV3.z, vPosV3.y, -vPosV3.x)
+						elif voxelResource.draw_direction == voxelResource.DrawDirection.Y_Positive:
+							vPos.origin = Vector3(vPosV3.y, vPosV3.z, -vPosV3.x)
+						elif voxelResource.draw_direction == voxelResource.DrawDirection.Y_Negative :
+							vPos.origin = Vector3(vPosV3.y, -vPosV3.z, vPosV3.x)
+						elif voxelResource.draw_direction == voxelResource.DrawDirection.Z_Positive:
+							vPos.origin = Vector3(-vPosV3.x, vPosV3.y, vPosV3.z)
 						else:
-							vPos.origin = Vector3(x, y, z)
+							vPos.origin = Vector3(vPosV3.x, vPosV3.y, -vPosV3.z)
 						
 						# No need for velocity
 						var velocity = Vector3.ZERO
@@ -162,12 +190,12 @@ func make_voxel() -> void:
 						
 						
 			# Step to next Atlas layer
-			if zPositive:
-				vRZ += 1
-			else:
-				vRZ -= 1
+			vRZ += 1
+
 	#Once we are done, stop emitting!
 	self.emitting = false
+	
+	print(self.name, " has finished making voxels!")
 	
 	#CREATING A NEW AABB TO REPLACE PARTICLE'S VISIBILITY AABB
 	var calcAABB = AABB()
@@ -184,14 +212,23 @@ func make_voxel() -> void:
 	var AABB_pos = Vector3((AABB_maxPos-AABB_minPos)*0.5+AABB_minPos)
 	
 	# Convert AABB position and size to local coordinates
-	if voxelResource.spriteView == voxelResource.SpriteView.X_Positive or voxelResource.spriteView == voxelResource.SpriteView.X_Negative:
-		calcAABB.position = Vector3(AABB_pos.z-AABB_size.z/2, AABB_pos.y-AABB_size.y/2, -AABB_pos.x-AABB_size.x/2)
+	if voxelResource.draw_direction == voxelResource.DrawDirection.X_Positive:
+		calcAABB.position = Vector3(AABB_pos.z-AABB_size.z/2, AABB_pos.y-AABB_size.y/2, AABB_pos.x-AABB_size.x/2)
 		calcAABB.size = Vector3(AABB_size.z, AABB_size.y, AABB_size.x)
-	elif voxelResource.spriteView == voxelResource.SpriteView.Y_Positive or voxelResource.spriteView == voxelResource.SpriteView.Y_Negative:
+	elif voxelResource.draw_direction == voxelResource.DrawDirection.X_Negative:
+		calcAABB.position = Vector3(-AABB_pos.z-AABB_size.z/2, AABB_pos.y-AABB_size.y/2, -AABB_pos.x-AABB_size.x/2)
+		calcAABB.size = Vector3(AABB_size.z, AABB_size.y, AABB_size.x)
+	elif voxelResource.draw_direction == voxelResource.DrawDirection.Y_Positive:
 		calcAABB.position = Vector3(AABB_pos.y-AABB_size.y/2, AABB_pos.z-AABB_size.z/2, -AABB_pos.x-AABB_size.x/2)
 		calcAABB.size = Vector3(AABB_size.y, AABB_size.z, AABB_size.x)
+	elif voxelResource.draw_direction == voxelResource.DrawDirection.Y_Negative:
+		calcAABB.position = Vector3(AABB_pos.y-AABB_size.y/2, -AABB_pos.z-AABB_size.z/2, AABB_pos.x-AABB_size.x/2)
+		calcAABB.size = Vector3(AABB_size.y, AABB_size.z, AABB_size.x)
+	elif voxelResource.draw_direction == voxelResource.DrawDirection.Z_Positive:
+		calcAABB.position = Vector3(-AABB_pos.x-AABB_size.x/2, AABB_pos.y-AABB_size.y/2, AABB_pos.z-AABB_size.z/2)
+		calcAABB.size = Vector3(AABB_size.x, AABB_size.y, AABB_size.z)	
 	else:
-		calcAABB.position = Vector3(AABB_pos.x-AABB_size.x/2, AABB_pos.y-AABB_size.y/2, AABB_pos.z-AABB_size.z/2)
+		calcAABB.position = Vector3(AABB_pos.x-AABB_size.x/2, AABB_pos.y-AABB_size.y/2, -AABB_pos.z-AABB_size.z/2)
 		calcAABB.size = Vector3(AABB_size.x, AABB_size.y, AABB_size.z)
 
 	# Set new visibility AABB values
