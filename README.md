@@ -59,7 +59,7 @@ First you need a .png file of your sliced voxel model! You can make your own in 
 1. Open **[MagicaVoxel](https://ephtracy.github.io/index.html?page=mv_main)**
 2. Load your voxel model
 3. In the *Export options*, use *Slice*
-4. Save the .png file
+4. Save the **.png** file
 5. Open **Godot**
 6. Open your project with the *Retro Voxel package* included
 7. Import your *voxel slices .png* file
@@ -70,8 +70,31 @@ First you need a .png file of your sliced voxel model! You can make your own in 
 13. Set the *Sheet* dimensions' *X value* to **1**, and *Y value* to your voxel's **Z depth layer count** <br> <i>Note: To get the correct number, find your model's size and check the value on the Z axis.</i> 
 14. Set the *Sprite View* to **"Y Positive"** and *Row Order* to **Bottom To Top**
 15. Leave the Pivot Offset as it is right now, you can always change it later!
+16. You can continue with the [Voxel Maker setup](#voxel-maker-setup)!
 
-#### Voxel Maker Setup
+#### Custom workflow _(using any other image editor)_
+1. Create your voxel model's slices by creating an image file
+2. You only need to follow two three rules:
+     1. Set your *background* to be *transparent* and *use full opaque pixels*!
+     2. Your image atlas should consist of *tiles with same sizes*! *(Individual tiles can have non-uniform dimensions)*
+     3. If you decide to use *multiple columns*, keep in mind that the script will always read each row's tiles from *left to right*!
+3. Save the voxel atlas as a **.png** file
+4. Open **Godot**
+5. Open your project with the *Retro Voxel package* included
+6. Import your *voxel atlas .png* file
+7. *Import as* ***Image***
+8. *Create New → Resource...*
+9. Search for *VoxelResource*
+10. In the *VoxelResource* add your *voxel image file* as the *Voxel Atlas property*
+11. Set the *Sheet* dimensions' *X value* to the number of **columns** *(tiles you made horizontally)*, and *Y value* to the number of **rows** *(tiles you made vertically)*
+12. Set the *Sprite View* to your desired axis:
+      - Each axis represents in which direction each tile will be drawn
+      - Each axis' positive or negative property decides in which order the tiles are drawn
+13. Set the *Row Order* depending on *which order* you want the script *to read your rows*
+14. Leave the Pivot Offset as it is right now, you can always change it later!
+15. You can continue with the [Voxel Maker setup](#voxel-maker-setup)!
+
+#### Voxel Maker setup
 1. Under the scenes folder use either b_voxels_template.tscn or c_voxels_template.tscn depending on if you want to create a (b) billboard or (c) cube voxel model. <br> Once you instantiate either into your scene, you will get a ***"Voxel Resource is not set."*** error - **don't mind it yet!**
 2. In the *Inspector* find the *Voxel Maker script's* properties and add your **Voxel Resource** to the *script's property*!
 3. *Voxel Size* is **1** by default, in some cases it is useful to set the size to a bigger value in the billboard variant.
